@@ -1,0 +1,170 @@
+{
+  "app": {
+    "name": "EasySplit",
+    "tagline": "Split expenses with ease"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "groups": "Groups",
+    "expenses": "Expenses",
+    "debts": "Debts",
+    "analytics": "Analytics",
+    "settings": "Settings"
+  },
+  "groups": {
+    "title": "Groups",
+    "create": "Create Group",
+    "edit": "Edit Group",
+    "delete": "Delete Group",
+    "name": "Group Name",
+    "description": "Description",
+    "currency": "Currency",
+    "participants": "Participants",
+    "noGroups": "No groups yet. Create your first group to get started!",
+    "confirmDelete": "Are you sure you want to delete this group? This action cannot be undone.",
+    "current": "Current Group"
+  },
+  "participants": {
+    "title": "Participants",
+    "add": "Add Participant",
+    "edit": "Edit Participant",
+    "delete": "Delete Participant",
+    "name": "Name",
+    "email": "Email",
+    "noParticipants": "No participants in this group yet.",
+    "confirmDelete": "Are you sure you want to remove this participant?"
+  },
+  "expenses": {
+    "title": "Expenses",
+    "add": "Add Expense",
+    "edit": "Edit Expense",
+    "delete": "Delete Expense",
+    "description": "Description",
+    "amount": "Amount",
+    "category": "Category",
+    "date": "Date",
+    "paidBy": "Paid by",
+    "splitType": "Split type",
+    "notes": "Notes",
+    "tags": "Tags",
+    "receipt": "Receipt",
+    "noExpenses": "No expenses recorded yet.",
+    "confirmDelete": "Are you sure you want to delete this expense?",
+    "splitTypes": {
+      "equal": "Split equally",
+      "fixed": "Fixed amounts",
+      "percentage": "By percentage"
+    },
+    "categories": {
+      "food": "Food & Dining",
+      "transport": "Transportation",
+      "shopping": "Shopping",
+      "entertainment": "Entertainment",
+      "bills": "Bills & Utilities",
+      "travel": "Travel",
+      "healthcare": "Healthcare",
+      "education": "Education",
+      "groceries": "Groceries",
+      "other": "Other"
+    }
+  },
+  "debts": {
+    "title": "Debts & Settlements",
+    "settle": "Settle Up",
+    "settled": "Settled",
+    "owes": "owes",
+    "to": "to",
+    "noDebts": "All settled up! No outstanding debts.",
+    "confirmSettle": "Mark this debt as settled?",
+    "settlementNotes": "Settlement notes"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "totalExpenses": "Total Expenses",
+    "totalAmount": "Total Amount",
+    "averageExpense": "Average Expense",
+    "categoryBreakdown": "Category Breakdown",
+    "monthlyTrends": "Monthly Trends",
+    "participantContributions": "Participant Contributions"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "currency": "Default Currency",
+    "notifications": "Notifications",
+    "about": "About",
+    "export": "Export Data",
+    "import": "Import Data",
+    "clearData": "Clear All Data",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "confirmClearData": "Are you sure you want to clear all data? This action cannot be undone."
+  },
+  "pwa": {
+    "install": "Install App",
+    "update": "Update Available",
+    "updateMessage": "A new version is available. Update now?",
+    "offline": "You're offline",
+    "online": "You're back online"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "total": "Total",
+    "date": "Date",
+    "amount": "Amount",
+    "name": "Name",
+    "description": "Description",
+    "required": "Required",
+    "optional": "Optional"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidAmount": "Please enter a valid amount",
+    "splitMismatch": "Split amounts don't match the total expense",
+    "noParticipants": "At least one participant is required",
+    "networkError": "Network error. Please check your connection.",
+    "storageError": "Storage error. Please try again.",
+    "unknownError": "An unexpected error occurred"
+  },
+  "onboarding": {
+    "welcome": "Welcome to EasySplit!",
+    "step1": {
+      "title": "Create Your First Group",
+      "description": "Groups help you organize expenses with different sets of people."
+    },
+    "step2": {
+      "title": "Add Participants",
+      "description": "Add the people who will be sharing expenses in this group."
+    },
+    "step3": {
+      "title": "Record Expenses",
+      "description": "Add expenses and choose how to split them among participants."
+    },
+    "step4": {
+      "title": "Settle Debts",
+      "description": "View who owes what and mark debts as settled when paid."
+    },
+    "next": "Next",
+    "skip": "Skip",
+    "finish": "Get Started"
+  }
+}
