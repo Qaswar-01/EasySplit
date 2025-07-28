@@ -429,6 +429,58 @@ const useAppStore = create((set, get) => ({
 
         console.log('✅ Seed data loaded successfully!');
         console.log(`📊 Loaded: ${seedData.groups.length} groups, ${seedData.participants.length} participants, ${seedData.expenses.length} expenses`);
+      },
+
+      // Clear all data
+      clearAllData: async () => {
+        try {
+          set({ isLoading: true });
+
+          // Clear IndexedDB
+          await Promise.all([
+            groupsStore.clear(),
+            expensesStore.clear(),
+            participantsStore.clear(),
+            settlementsStore.clear(),
+            settingsStore.clear()
+          ]);
+
+          // Reset store state
+          set({
+            groups: [],
+            participants: [],
+            expenses: [],
+            settlements: [],
+            currentGroupId: null,
+            settings: {
+              theme: 'system',
+              language: 'en',
+              defaultCurrency: 'PKR',
+              showOnboarding: false,
+              notifications: {
+                debts: true,
+                settlements: true,
+                newExpenses: true
+              }
+            }
+          });
+
+          console.log('🗑️ All data cleared successfully');
+
+          // Show notification
+          const notificationStore = useNotificationStore.getState();
+          notificationStore.notifySuccess(
+            'Data Cleared',
+            'All data has been successfully cleared from the app.'
+          );
+
+        } catch (error) {
+          console.error('Failed to clear data:', error);
+          set({ error: 'Failed to clear data' });
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
       }
     }));
 

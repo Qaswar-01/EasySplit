@@ -181,20 +181,20 @@ const Settings = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center justify-between"
       >
-        <div className="flex items-center space-x-3">
-          <SettingsIcon className="w-8 h-8 text-primary-600 dark:text-primary-400" />
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+        <div className="flex items-center space-x-3 min-w-0 flex-1">
+          <SettingsIcon className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 truncate">
               {t('settings.title')}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 truncate">
               Customize your EasySplit experience
             </p>
           </div>
@@ -357,23 +357,25 @@ const Settings = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="card p-6"
+          className="card p-4 sm:p-6"
         >
           <div className="flex items-center space-x-3 mb-4">
             <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
               Data Management
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <Button
               variant="secondary"
               onClick={exportData}
               icon={<Download className="w-4 h-4" />}
               fullWidth
+              className="text-sm sm:text-base py-2 sm:py-3"
             >
-              {t('settings.export')}
+              <span className="sm:hidden">Export</span>
+              <span className="hidden sm:inline">{t('settings.export')}</span>
             </Button>
 
             <Button
@@ -381,8 +383,10 @@ const Settings = () => {
               onClick={importData}
               icon={<Upload className="w-4 h-4" />}
               fullWidth
+              className="text-sm sm:text-base py-2 sm:py-3"
             >
-              {t('settings.import')}
+              <span className="sm:hidden">Import</span>
+              <span className="hidden sm:inline">{t('settings.import')}</span>
             </Button>
 
             <Button
@@ -390,9 +394,17 @@ const Settings = () => {
               onClick={() => setShowClearDataDialog(true)}
               icon={<Trash2 className="w-4 h-4" />}
               fullWidth
+              className="text-sm sm:text-base py-2 sm:py-3"
             >
-              {t('settings.clearData')}
+              <span className="sm:hidden">Clear Data</span>
+              <span className="hidden sm:inline">{t('settings.clearData')}</span>
             </Button>
+          </div>
+
+          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+            <p className="text-xs sm:text-sm text-yellow-800 dark:text-yellow-200">
+              <strong>Warning:</strong> Clearing data will permanently remove all groups, expenses, and participants. This action cannot be undone.
+            </p>
           </div>
         </motion.div>
 

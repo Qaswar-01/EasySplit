@@ -55,9 +55,10 @@ const DebtCard = ({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
       transition={{ delay }}
-      className="card p-6 hover:shadow-md transition-all duration-200"
+      className="card p-4 sm:p-6 hover:shadow-md transition-all duration-200"
     >
-      <div className="flex items-center justify-between">
+      {/* Desktop Layout */}
+      <div className="hidden md:flex items-center justify-between">
         {/* Debt Flow Visualization */}
         <div className="flex items-center space-x-4 flex-1">
           {/* From Person */}
@@ -126,49 +127,70 @@ const DebtCard = ({
       </div>
 
       {/* Mobile Layout */}
-      <div className="md:hidden mt-4 space-y-4">
+      <div className="md:hidden space-y-4">
+        {/* Amount Display */}
+        <div className="text-center bg-primary-50 dark:bg-primary-900/20 rounded-lg p-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Amount to settle</p>
+          <p className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+            {formatCurrency(debt.amount, currency)}
+          </p>
+        </div>
+
+        {/* Participants */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className={`w-10 h-10 ${getAvatarColor(debt.fromId)} rounded-full flex items-center justify-center text-white font-semibold text-sm`}>
+          <div className="flex items-center space-x-3 flex-1">
+            <div className={`w-12 h-12 ${getAvatarColor(debt.fromId)} rounded-full flex items-center justify-center text-white font-semibold`}>
               {getParticipantInitials(debt.fromId)}
             </div>
-            <div>
-              <p className="font-medium text-gray-900 dark:text-gray-100">
+            <div className="flex-1">
+              <p className="font-semibold text-gray-900 dark:text-gray-100">
                 {fromName}
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Owes
+                Owes money
               </p>
             </div>
           </div>
-          <ArrowRight className="w-5 h-5 text-gray-400" />
-          <div className="flex items-center space-x-3">
-            <div>
-              <p className="font-medium text-gray-900 dark:text-gray-100 text-right">
+
+          <div className="mx-4">
+            <ArrowRight className="w-6 h-6 text-gray-400" />
+          </div>
+
+          <div className="flex items-center space-x-3 flex-1">
+            <div className="flex-1 text-right">
+              <p className="font-semibold text-gray-900 dark:text-gray-100">
                 {toName}
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 text-right">
-                Is owed
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Should receive
               </p>
             </div>
-            <div className={`w-10 h-10 ${getAvatarColor(debt.toId)} rounded-full flex items-center justify-center text-white font-semibold text-sm`}>
+            <div className={`w-12 h-12 ${getAvatarColor(debt.toId)} rounded-full flex items-center justify-center text-white font-semibold`}>
               {getParticipantInitials(debt.toId)}
             </div>
           </div>
         </div>
-        
-        <div className="text-center">
-          <p className="text-xl font-bold text-primary-600 dark:text-primary-400 mb-3">
-            {formatCurrency(debt.amount, currency)}
-          </p>
+
+        {/* Actions */}
+        <div className="space-y-3">
           <Button
             onClick={onSettle}
             variant="success"
             icon={<CheckCircle className="w-4 h-4" />}
             fullWidth
+            className="py-3"
           >
-            Settle Up
+            Mark as Settled
           </Button>
+
+          <div className="w-full">
+            <DebtReminder
+              debt={debt}
+              participants={participants}
+              currency={currency}
+              onReminderSet={onReminderSet}
+            />
+          </div>
         </div>
       </div>
     </motion.div>
