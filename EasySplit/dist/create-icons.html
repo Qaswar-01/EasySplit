@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create PWA Icons</title>
+</head>
+<body>
+    <canvas id="canvas" width="512" height="512" style="border: 1px solid #ccc;"></canvas>
+    <br><br>
+    <button onclick="downloadIcon(64)">Download 64x64</button>
+    <button onclick="downloadIcon(192)">Download 192x192</button>
+    <button onclick="downloadIcon(512)">Download 512x512</button>
+    <button onclick="downloadMaskable()">Download Maskable 512x512</button>
+
+    <script>
+        function createIcon(size, isMaskable = false) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#3b82f6');
+            gradient.addColorStop(1, '#1d4ed8');
+            ctx.fillStyle = gradient;
+            
+            if (isMaskable) {
+                // Maskable icon needs safe area
+                ctx.fillRect(0, 0, size, size);
+            } else {
+                // Regular icon with rounded corners
+                const radius = size * 0.1;
+                ctx.beginPath();
+                ctx.roundRect(0, 0, size, size, radius);
+                ctx.fill();
+            }
+            
+            // Icon content - Dollar sign
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.4}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('₨', size / 2, size / 2);
+            
+            return canvas.toDataURL('image/png');
+        }
+        
+        function downloadIcon(size) {
+            const dataUrl = createIcon(size);
+            const link = document.createElement('a');
+            link.download = `pwa-${size}x${size}.png`;
+            link.href = dataUrl;
+            link.click();
+        }
+        
+        function downloadMaskable() {
+            const dataUrl = createIcon(512, true);
+            const link = document.createElement('a');
+            link.download = 'maskable-icon-512x512.png';
+            link.href = dataUrl;
+            link.click();
+        }
+        
+        // Create initial 512x512 icon
+        createIcon(512);
+    </script>
+</body>
+</html>
