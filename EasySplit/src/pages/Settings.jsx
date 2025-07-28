@@ -74,10 +74,16 @@ const Settings = () => {
 
   const handleClearAllData = async () => {
     try {
-      await clearAllData();
-      setShowClearDataDialog(false);
+      console.log('🔄 User confirmed data clearing...');
+      const success = await clearAllData();
+      if (success) {
+        setShowClearDataDialog(false);
+        console.log('✅ Clear data dialog closed');
+      }
     } catch (error) {
-      console.error('Failed to clear data:', error);
+      console.error('❌ Failed to clear data in Settings:', error);
+      // Error notification is handled in the store
+      setShowClearDataDialog(false); // Close dialog even on error
     }
   };
 
@@ -568,9 +574,9 @@ const Settings = () => {
         onClose={() => setShowClearDataDialog(false)}
         onConfirm={handleClearAllData}
         title="Clear All Data"
-        message={t('settings.confirmClearData')}
+        message="Are you sure you want to clear all data? This action cannot be undone and will remove all groups, expenses, participants, and settings."
         confirmText="Clear All Data"
-        cancelText={t('common.cancel')}
+        cancelText="Cancel"
         variant="danger"
         isLoading={isLoading}
       />

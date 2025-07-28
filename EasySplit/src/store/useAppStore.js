@@ -8,6 +8,7 @@ import {
   expensesStore,
   participantsStore,
   settlementsStore,
+  settingsStore,
   localStorageUtils,
   initDB
 } from '../utils/storage.js';
@@ -467,8 +468,10 @@ const useAppStore = create((set, get) => ({
       clearAllData: async () => {
         try {
           set({ isLoading: true });
+          console.log('🗑️ Starting to clear all data...');
 
-          // Clear IndexedDB
+          // Clear IndexedDB stores
+          console.log('🗄️ Clearing IndexedDB stores...');
           await Promise.all([
             groupsStore.clear(),
             expensesStore.clear(),
@@ -476,14 +479,17 @@ const useAppStore = create((set, get) => ({
             settlementsStore.clear(),
             settingsStore.clear()
           ]);
+          console.log('✅ IndexedDB stores cleared');
 
-          // Reset store state
+          // Reset store state to initial values
+          console.log('🔄 Resetting store state...');
           set({
             groups: [],
             participants: [],
             expenses: [],
             settlements: [],
             currentGroupId: null,
+            error: null,
             settings: {
               theme: 'system',
               language: 'en',
@@ -497,18 +503,28 @@ const useAppStore = create((set, get) => ({
             }
           });
 
-          console.log('🗑️ All data cleared successfully');
+          console.log('🎉 All data cleared successfully');
 
-          // Show notification
+          // Show success notification
           const notificationStore = useNotificationStore.getState();
           notificationStore.notifySuccess(
             'Data Cleared',
             'All data has been successfully cleared from the app.'
           );
 
+          return true;
+
         } catch (error) {
-          console.error('Failed to clear data:', error);
-          set({ error: 'Failed to clear data' });
+          console.error('❌ Failed to clear data:', error);
+
+          // Show error notification
+          const notificationStore = useNotificationStore.getState();
+          notificationStore.notifyError(
+            'Clear Data Failed',
+            'Failed to clear all data. Please try again.'
+          );
+
+          set({ error: 'Failed to clear data: ' + error.message });
           throw error;
         } finally {
           set({ isLoading: false });
