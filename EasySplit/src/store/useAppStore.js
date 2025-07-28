@@ -35,7 +35,7 @@ const useAppStore = create(
         theme: 'system',
         language: 'en',
         defaultCurrency: 'PKR',
-        showOnboarding: true,
+        showOnboarding: false,
         notifications: {
           debts: true,
           settlements: true,
