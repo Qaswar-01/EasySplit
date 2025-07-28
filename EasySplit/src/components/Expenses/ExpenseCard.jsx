@@ -3,14 +3,19 @@ import { Calendar, Edit, Trash2, Tag, FileText, Users, DollarSign } from 'lucide
 import { formatCurrency } from '../../utils/calculations';
 import Button from '../UI/Button';
 
-const ExpenseCard = ({ 
-  expense, 
+const ExpenseCard = ({
+  expense,
   participants = [],
   currency = 'PKR',
-  onEdit, 
-  onDelete, 
-  delay = 0 
+  onEdit,
+  onDelete,
+  delay = 0
 }) => {
+  // Safety check for expense object
+  if (!expense) {
+    return null;
+  }
+
   const getParticipantName = (id) => {
     const participant = participants.find(p => p.id === id);
     return participant ? participant.name : 'Unknown';
@@ -18,6 +23,10 @@ const ExpenseCard = ({
 
   const getPaidByNames = () => {
     // Handle both array and string formats for backward compatibility
+    if (!expense.paidBy) {
+      return 'Unknown';
+    }
+
     if (Array.isArray(expense.paidBy)) {
       return expense.paidBy.map(id => getParticipantName(id)).join(', ');
     } else if (typeof expense.paidBy === 'string') {
@@ -44,9 +53,16 @@ const ExpenseCard = ({
   };
 
   const getSplitTypeDisplay = () => {
-    if (expense.splits.length === 0) return 'No split';
-    
+    // Safety check for splits array
+    if (!expense.splits || !Array.isArray(expense.splits) || expense.splits.length === 0) {
+      return 'No split';
+    }
+
     const firstSplit = expense.splits[0];
+    if (!firstSplit || !firstSplit.type) {
+      return 'Custom split';
+    }
+
     switch (firstSplit.type) {
       case 'equal':
         return 'Split equally';
@@ -72,17 +88,17 @@ const ExpenseCard = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-2">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
-              {expense.description}
+              {expense.description || 'Untitled Expense'}
             </h3>
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(expense.category)}`}>
-              {expense.category}
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(expense.category || 'Other')}`}>
+              {expense.category || 'Other'}
             </span>
           </div>
           
           <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 space-x-4">
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-1" />
-              {new Date(expense.date).toLocaleDateString()}
+              {expense.date ? new Date(expense.date).toLocaleDateString() : 'No date'}
             </div>
             <div className="flex items-center">
               <Users className="w-4 h-4 mr-1" />
@@ -94,7 +110,7 @@ const ExpenseCard = ({
         {/* Amount */}
         <div className="text-right ml-4">
           <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {formatCurrency(expense.amount, currency)}
+            {formatCurrency(expense.amount || 0, currency)}
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
             {getSplitTypeDisplay()}
@@ -111,7 +127,7 @@ const ExpenseCard = ({
           </span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {expense.splits.map(split => (
+          {(expense.splits && Array.isArray(expense.splits) ? expense.splits : []).map(split => (
             <div 
               key={split.participantId}
               className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-700/50 rounded"
@@ -163,7 +179,7 @@ const ExpenseCard = ({
       {/* Actions */}
       <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
         <div className="text-xs text-gray-500 dark:text-gray-400">
-          Created {new Date(expense.createdAt).toLocaleDateString()}
+          Created {expense.createdAt ? new Date(expense.createdAt).toLocaleDateString() : 'Unknown'}
           {expense.updatedAt && expense.updatedAt !== expense.createdAt && (
             <span> • Updated {new Date(expense.updatedAt).toLocaleDateString()}</span>
           )}
