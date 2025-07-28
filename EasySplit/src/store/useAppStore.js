@@ -3,7 +3,6 @@
  */
 
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   groupsStore,
   expensesStore,
@@ -13,12 +12,10 @@ import {
   initDB
 } from '../utils/storage.js';
 import { calculateDebts } from '../utils/calculations.js';
-import { shouldLoadSeedData, loadSeedData, generateSeedData } from '../utils/seedData';
+import { generateSeedData } from '../utils/seedData';
 import useNotificationStore from './useNotificationStore.js';
 
-const useAppStore = create(
-  persist(
-    (set, get) => ({
+const useAppStore = create((set, get) => ({
       // App state
       isLoading: false,
       error: null,
@@ -61,6 +58,13 @@ const useAppStore = create(
             settlementsStore.getAll()
           ]);
 
+          console.log('📊 Loaded from IndexedDB:', {
+            groups: groups.length,
+            expenses: expenses.length,
+            participants: participants.length,
+            settlements: settlements.length
+          });
+
           set({
             groups,
             expenses,
@@ -97,13 +101,17 @@ const useAppStore = create(
             updatedAt: new Date()
           };
 
+          console.log('💾 Saving group to IndexedDB:', newGroup);
           await groupsStore.add(newGroup);
+          console.log('✅ Group saved successfully');
 
           const currentState = get();
           set({
             groups: [...currentState.groups, newGroup],
             currentGroupId: currentState.currentGroupId || newGroup.id
           });
+
+          console.log('📊 Updated state - total groups:', currentState.groups.length + 1);
 
           // Notify about group creation
           const notificationStore = useNotificationStore.getState();
@@ -422,37 +430,8 @@ const useAppStore = create(
         console.log('✅ Seed data loaded successfully!');
         console.log(`📊 Loaded: ${seedData.groups.length} groups, ${seedData.participants.length} participants, ${seedData.expenses.length} expenses`);
       }
-    }),
-    {
-      name: 'easysplit-storage',
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        groups: state.groups,
-        participants: state.participants,
-        expenses: state.expenses,
-        settlements: state.settlements,
-        currentGroupId: state.currentGroupId,
-        settings: state.settings
-      })
-    }
-  )
-);
+    }));
 
-// Initialize seed data if needed
-const initializeSeedData = () => {
-  const store = useAppStore.getState();
-
-  if (shouldLoadSeedData(store)) {
-    console.log('🌱 Loading seed data...');
-    loadSeedData(useAppStore);
-  } else {
-    console.log('📊 Existing data found, skipping seed data load');
-  }
-};
-
-// Method is now part of the store
-
-// Load seed data on app start
-setTimeout(initializeSeedData, 100);
+// Seed data initialization is handled within the store methods
 
 export default useAppStore;

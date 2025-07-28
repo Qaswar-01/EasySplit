@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/EasySplit/',
+  base: '/',
   plugins: [
     react(),
     VitePWA({
@@ -35,8 +35,8 @@ export default defineConfig({
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/EasySplit/',
-        start_url: '/EasySplit/',
+        scope: '/',
+        start_url: '/',
         icons: [
           {
             src: 'icon-192.svg',
