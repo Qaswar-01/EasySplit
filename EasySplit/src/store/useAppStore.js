@@ -49,8 +49,16 @@ const useAppStore = create((set, get) => ({
       initializeApp: async () => {
         try {
           set({ isLoading: true });
+
+          // Enhanced debugging for mobile
+          console.log('🔄 Initializing app...');
+          console.log('📱 User Agent:', navigator.userAgent);
+          console.log('🗄️ IndexedDB supported:', 'indexedDB' in window);
+          console.log('🔧 Service Worker supported:', 'serviceWorker' in navigator);
+
           await initDB();
-          
+          console.log('✅ IndexedDB initialized');
+
           const [groups, expenses, participants, settlements] = await Promise.all([
             groupsStore.getAll(),
             expensesStore.getAll(),
@@ -65,13 +73,36 @@ const useAppStore = create((set, get) => ({
             settlements: settlements.length
           });
 
-          set({
-            groups,
-            expenses,
-            participants,
-            settlements,
-            currentGroupId: get().currentGroupId || (groups.length > 0 ? groups[0].id : null)
-          });
+          // If no data found, try to load seed data for demo
+          if (groups.length === 0) {
+            console.log('🌱 No data found, loading seed data for demo...');
+            const seedData = generateSeedData();
+
+            // Save seed data to IndexedDB
+            await Promise.all([
+              ...seedData.groups.map(group => groupsStore.put(group)),
+              ...seedData.participants.map(participant => participantsStore.put(participant)),
+              ...seedData.expenses.map(expense => expensesStore.put(expense))
+            ]);
+
+            console.log('✅ Seed data saved to IndexedDB');
+
+            set({
+              groups: seedData.groups,
+              expenses: seedData.expenses,
+              participants: seedData.participants,
+              settlements: seedData.settlements,
+              currentGroupId: seedData.groups[0].id
+            });
+          } else {
+            set({
+              groups,
+              expenses,
+              participants,
+              settlements,
+              currentGroupId: get().currentGroupId || (groups.length > 0 ? groups[0].id : null)
+            });
+          }
 
           // Add welcome notification for new users
           if (groups.length === 0) {
@@ -82,8 +113,9 @@ const useAppStore = create((set, get) => ({
             );
           }
         } catch (error) {
-          console.error('Failed to initialize app:', error);
-          set({ error: 'Failed to load data' });
+          console.error('❌ Failed to initialize app:', error);
+          console.error('Error details:', error.message, error.stack);
+          set({ error: 'Failed to load data: ' + error.message });
         } finally {
           set({ isLoading: false });
         }

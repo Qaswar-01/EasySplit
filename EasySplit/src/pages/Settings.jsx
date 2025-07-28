@@ -19,7 +19,8 @@ import {
   Github,
   Heart,
   Book,
-  Clock
+  Clock,
+  Database
 } from 'lucide-react';
 import useAppStore from '../store/useAppStore';
 import useNotificationStore from '../store/useNotificationStore';
@@ -34,7 +35,7 @@ import { CURRENCIES, LANGUAGES } from '../types/index';
 const Settings = () => {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
-  const { settings, updateSettings, clearAllData, isLoading } = useAppStore();
+  const { settings, updateSettings, clearAllData, forceLoadSeedData, isLoading } = useAppStore();
 
   const [showClearDataDialog, setShowClearDataDialog] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
@@ -366,7 +367,7 @@ const Settings = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <Button
               variant="secondary"
               onClick={exportData}
@@ -387,6 +388,17 @@ const Settings = () => {
             >
               <span className="sm:hidden">Import</span>
               <span className="hidden sm:inline">{t('settings.import')}</span>
+            </Button>
+
+            <Button
+              variant="primary"
+              onClick={forceLoadSeedData}
+              icon={<Database className="w-4 h-4" />}
+              fullWidth
+              className="text-sm sm:text-base py-2 sm:py-3"
+            >
+              <span className="sm:hidden">Demo Data</span>
+              <span className="hidden sm:inline">Load Demo Data</span>
             </Button>
 
             <Button

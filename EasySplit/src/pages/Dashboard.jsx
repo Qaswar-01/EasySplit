@@ -30,10 +30,25 @@ const Dashboard = () => {
   // Safety checks to prevent errors during data loading
   if (!currentGroup) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="text-gray-500 dark:text-gray-400">
-            No group selected. Please select or create a group.
+      <div className="flex items-center justify-center h-64 px-4">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Users className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            No Groups Found
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">
+            Create your first group to start splitting expenses with friends, or load demo data to explore the app.
+          </p>
+          <div className="space-y-3">
+            <Button
+              onClick={() => navigate('/groups')}
+              icon={<Plus className="w-4 h-4" />}
+              className="w-full sm:w-auto"
+            >
+              Create Your First Group
+            </Button>
           </div>
         </div>
       </div>
