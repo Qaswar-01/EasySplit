@@ -14,7 +14,7 @@ export const initializePWA = () => {
     console.log('PWA install prompt available');
     e.preventDefault();
     deferredPrompt = e;
-    
+
     // Dispatch custom event to notify components
     window.dispatchEvent(new CustomEvent('pwa-install-available'));
   });
@@ -23,14 +23,18 @@ export const initializePWA = () => {
   window.addEventListener('appinstalled', () => {
     console.log('PWA was installed');
     deferredPrompt = null;
-    
+
     // Dispatch custom event to notify components
     window.dispatchEvent(new CustomEvent('pwa-installed'));
   });
 
-  // Register service worker
+  // Service worker is registered by VitePWA plugin
+  // Get existing registration if available
   if ('serviceWorker' in navigator) {
-    registerServiceWorker();
+    navigator.serviceWorker.ready.then((registration) => {
+      swRegistration = registration;
+      console.log('Service Worker ready:', swRegistration);
+    });
   }
 
   // Handle online/offline status
@@ -45,32 +49,7 @@ export const initializePWA = () => {
   });
 };
 
-/**
- * Register service worker
- */
-const registerServiceWorker = async () => {
-  try {
-    swRegistration = await navigator.serviceWorker.register('/sw.js');
-    console.log('Service Worker registered:', swRegistration);
-
-    // Listen for service worker updates
-    swRegistration.addEventListener('updatefound', () => {
-      const newWorker = swRegistration.installing;
-      
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          console.log('New service worker available');
-          window.dispatchEvent(new CustomEvent('pwa-update-available', {
-            detail: { registration: swRegistration }
-          }));
-        }
-      });
-    });
-
-  } catch (error) {
-    console.error('Service Worker registration failed:', error);
-  }
-};
+// Service worker registration is handled by VitePWA plugin
 
 /**
  * Prompt user to install PWA

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { CreditCard, CheckCircle, Users, DollarSign, HeartHandshake, Bell } from 'lucide-react';
@@ -20,7 +20,9 @@ const Debts = () => {
     getGroupParticipants,
     getGroupDebts,
     addSettlement,
-    isLoading
+    isLoading,
+    groups,
+    setCurrentGroupId
   } = useAppStore();
 
   const [reminders, setReminders] = useState([]);
@@ -39,6 +41,14 @@ const Debts = () => {
   }, []);
 
   const currentGroup = getCurrentGroup();
+
+  // Auto-select first group if none is selected but groups exist
+  React.useEffect(() => {
+    if (!currentGroup && groups.length > 0) {
+      setCurrentGroupId(groups[0].id);
+    }
+  }, [currentGroup, groups, setCurrentGroupId]);
+
   const participants = currentGroup ? getGroupParticipants(currentGroup.id) : [];
   const debts = currentGroup ? getGroupDebts(currentGroup.id) : [];
   const currency = useCurrency();

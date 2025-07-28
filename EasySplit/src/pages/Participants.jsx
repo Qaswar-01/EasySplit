@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Plus, Users, UserPlus, Edit, Trash2 } from 'lucide-react';
@@ -23,6 +23,7 @@ const Participants = () => {
     updateParticipant,
     deleteParticipant,
     setCurrentGroup,
+    setCurrentGroupId,
     isLoading
   } = useAppStore();
 
@@ -32,6 +33,14 @@ const Participants = () => {
   const [showContactPicker, setShowContactPicker] = useState(false);
 
   const currentGroup = getCurrentGroup();
+
+  // Auto-select first group if none is selected but groups exist
+  React.useEffect(() => {
+    if (!currentGroup && groups.length > 0) {
+      setCurrentGroupId(groups[0].id);
+    }
+  }, [currentGroup, groups, setCurrentGroupId]);
+
   const participants = currentGroup ? getGroupParticipants(currentGroup.id) : [];
 
   const handleAddParticipant = async (participantData) => {

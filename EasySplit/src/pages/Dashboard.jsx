@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Users, Receipt, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -7,14 +8,24 @@ import { formatCurrency } from '../utils/calculations';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { 
-    getCurrentGroup, 
-    getGroupParticipants, 
-    getGroupExpenses, 
-    getGroupDebts 
+  const {
+    getCurrentGroup,
+    getGroupParticipants,
+    getGroupExpenses,
+    getGroupDebts,
+    groups,
+    addGroup,
+    setCurrentGroupId
   } = useAppStore();
 
   const currentGroup = getCurrentGroup();
+
+  // Auto-select first group if none is selected but groups exist
+  React.useEffect(() => {
+    if (!currentGroup && groups.length > 0) {
+      setCurrentGroupId(groups[0].id);
+    }
+  }, [currentGroup, groups, setCurrentGroupId]);
 
   // Safety checks to prevent errors during data loading
   if (!currentGroup) {
@@ -60,34 +71,7 @@ const Dashboard = () => {
     }
   ];
 
-  if (!currentGroup) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center py-12"
-        >
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-            <span className="text-3xl">🎉</span>
-          </div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-            Welcome to EasySplit! ✨
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg max-w-md mx-auto">
-            Create your first colorful group to start tracking expenses with friends and family in style!
-          </p>
-          <Button
-            onClick={() => navigate('/groups')}
-            icon={<Plus className="w-4 h-4" />}
-            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
-          >
-            Create Your First Group 🚀
-          </Button>
-        </motion.div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">

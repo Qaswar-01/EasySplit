@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Plus, Receipt, Search, Filter, Calendar, Users, DollarSign } from 'lucide-react';
@@ -25,7 +25,9 @@ const Expenses = () => {
     addExpense,
     updateExpense,
     deleteExpense,
-    isLoading
+    isLoading,
+    groups,
+    setCurrentGroupId
   } = useAppStore();
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -43,6 +45,14 @@ const Expenses = () => {
   });
 
   const currentGroup = getCurrentGroup();
+
+  // Auto-select first group if none is selected but groups exist
+  React.useEffect(() => {
+    if (!currentGroup && groups.length > 0) {
+      setCurrentGroupId(groups[0].id);
+    }
+  }, [currentGroup, groups, setCurrentGroupId]);
+
   const allExpenses = currentGroup ? getGroupExpenses(currentGroup.id) : [];
   const participants = currentGroup ? getGroupParticipants(currentGroup.id) : [];
   const currency = useCurrency();

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { BarChart3, PieChart, TrendingUp, Users, Calendar, DollarSign, CreditCard } from 'lucide-react';
@@ -17,12 +17,22 @@ const Analytics = () => {
     getCurrentGroup,
     getGroupExpenses,
     getGroupParticipants,
-    getGroupDebts
+    getGroupDebts,
+    groups,
+    setCurrentGroupId
   } = useAppStore();
 
   const [timeRange, setTimeRange] = useState('all'); // all, month, quarter, year
 
   const currentGroup = getCurrentGroup();
+
+  // Auto-select first group if none is selected but groups exist
+  React.useEffect(() => {
+    if (!currentGroup && groups.length > 0) {
+      setCurrentGroupId(groups[0].id);
+    }
+  }, [currentGroup, groups, setCurrentGroupId]);
+
   const allExpenses = currentGroup ? getGroupExpenses(currentGroup.id) : [];
   const participants = currentGroup ? getGroupParticipants(currentGroup.id) : [];
   const debts = currentGroup ? getGroupDebts(currentGroup.id) : [];
